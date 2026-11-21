@@ -17,7 +17,7 @@ services:
         fromService:
           name: cloudforge-cache
           type: keyvalue
-          property: hostport
+          property: connectionString 
       - key: OTEL_ENABLED
         value: "false"
 
