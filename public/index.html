@@ -37,6 +37,7 @@
     const endpoint = "/.netlify/functions/items";
     const status = document.querySelector("#status");
     const list = document.querySelector("#items");
+    const setStatus = (message) => { status.textContent = message; };
 
     async function loadItems() {
       status.textContent = "Loading items…";
