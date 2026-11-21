@@ -27,8 +27,12 @@ export default async (request) => {
         "Cache-Control": "no-store",
       },
     });
-  } catch {
-    return json({ error: "Could not reach the API. Please try again shortly." }, 502);
+  } catch (error) {
+    console.error("Cloudforge API request failed:", error);
+    return json({
+      error: "Could not reach the API.",
+      details: error instanceof Error ? error.message : String(error),
+    }, 502);
   }
 };
 
