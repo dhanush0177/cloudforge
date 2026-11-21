@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: cloudforge-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /livez
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: API_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cloudforge-db
+          property: connectionString
+      - key: REDIS_ADDR
+        fromService:
+          name: cloudforge-cache
+          type: keyvalue
+          property: hostport
+      - key: OTEL_ENABLED
+        value: "false"
+
+  - type: keyvalue
+    name: cloudforge-cache
+    plan: free
+    ipAllowList:
+      - source: 127.0.0.1/32
+        description: Private use only
+
+databases:
+  - name: cloudforge-db
+    plan: free
+    databaseName: cloudforge
+    user: cloudforge
