@@ -55,8 +55,32 @@
             const name = document.createElement("strong");
             name.textContent = item.name;
             const description = document.createElement("p");
-            description.textContent = item.description || "No description";
-            card.append(name, description);
+description.textContent = item.description || "No description";
+
+const deleteButton = document.createElement("button");
+deleteButton.type = "button";
+deleteButton.textContent = "Delete";
+deleteButton.addEventListener("click", async () => {
+  if (!window.confirm(`Delete "${item.name}"?`)) return;
+  deleteButton.disabled = true;
+  setStatus("Deleting item…");
+  try {
+    const response = await fetch(
+      `${endpoint}?id=${encodeURIComponent(item.id)}`,
+      { method: "DELETE" }
+    );
+    const result = response.status === 204 ? null : await response.json();
+    if (!response.ok) throw new Error(result?.error || "Could not delete item.");
+    await loadItems();
+    setStatus("Item deleted.");
+  } catch (error) {
+    setStatus(error.message || "Could not delete item.", true);
+  } finally {
+    deleteButton.disabled = false;
+  }
+});
+
+card.append(name, description, deleteButton);
             list.append(card);
           }
         }
